@@ -6,6 +6,13 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 require('dotenv').config(); // To access environment variables
 
+const userRoutes = require('./routes/userRoutes');
+const adRoutes = require('./routes/adRoutes');
+
+// Use routes
+app.use('/api/users', userRoutes);
+app.use('/api/ads', adRoutes);
+
 const app = express();
 const PORT = process.env.PORT || 5000;
 
