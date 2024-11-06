@@ -20,7 +20,9 @@ const adRoutes = require('./routes/adRoutes');
 app.get('/', (req, res) => {
     res.send('Welcome to Techify API');
 });
-
+app.get('/authors', (req, res) => {
+    res.send('Deepam and sudhanshu');
+});
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/ads', adRoutes);
