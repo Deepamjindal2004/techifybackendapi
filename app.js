@@ -26,13 +26,12 @@ app.use('/api/users', userRoutes);
 app.use('/api/ads', adRoutes);
 
 
+
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.log('MongoDB connection error:', err));
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => console.log('MongoDB connected'))
+    .catch(err => console.log('MongoDB connection error:', err));
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
