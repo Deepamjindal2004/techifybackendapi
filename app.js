@@ -16,6 +16,11 @@ app.use(bodyParser.json());
 const userRoutes = require('./routes/userRoutes');
 const adRoutes = require('./routes/adRoutes');
 
+// Define a root route
+app.get('/', (req, res) => {
+    res.send('Welcome to Techify API');
+});
+
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/ads', adRoutes);
