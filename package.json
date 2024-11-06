@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["backend", "API", "Node.js", "Express", "MongoDB", "Techify", "REST API", "authentication", "JSON Web Token", "bcrypt", "web development"],
+  "author": "Deepam Jindal, Sudhanshu Rawat, Vaibhav Kalia, Muskaan Saini, Pratik Nepal",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
