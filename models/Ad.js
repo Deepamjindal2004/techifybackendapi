@@ -1,6 +1,6 @@
 // models/Ad.js
 
-const mongoose = require('mongoose');
+const mongoose = require('mongoose');  // Import mongoose
 
 const adSchema = new mongoose.Schema({
     title: { type: String, required: true },

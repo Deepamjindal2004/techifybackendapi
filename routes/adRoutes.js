@@ -1,7 +1,7 @@
 // routes/adRoutes.js
 
-const express = require('express');
-const router = express.Router();
+const express = require('express');  // Import express for routing
+const router = express.Router();    // Create a new router instance
 const {
     createAd,
     getAllAds,
@@ -10,8 +10,8 @@ const {
     disableAd,
     createQuestion,
     answerQuestion
-} = require('../controllers/adController');
-const { authenticate } = require('../middleware/authMiddleware');
+} = require('../controllers/adController');  // Import the ad controller methods
+const { authenticate } = require('../middleware/authMiddleware'); // Import authentication middleware
 
 // Create an ad
 router.post('/', authenticate, createAd);
