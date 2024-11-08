@@ -5,22 +5,22 @@ const Question = require('../models/Question');
 
 // Create a question for an ad
 exports.createQuestion = async (req, res) => {
-    const { question } = req.body;            // Extract question text from request body
-    const adId = req.params.id;               // Get ad ID from request parameters
+    const { question } = req.body;            
+    const adId = req.params.id;               
     
     try {
-        const ad = await Ad.findById(adId); // Find ad by ID
+        const ad = await Ad.findById(adId); 
         if (!ad) return res.status(404).json({ message: 'Ad not found' });
 
         // Create a new question associated with the ad
         const newQuestion = new Question({
             adId: adId,
-            userId: req.user.id, // Using the user ID from the token
+            userId: req.user.id, 
             question: question
         });
 
-        const savedQuestion = await newQuestion.save();  // Save question
-        res.status(201).json(savedQuestion);              // Respond with the saved question
+        const savedQuestion = await newQuestion.save();  
+        res.status(201).json(savedQuestion);              
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -28,19 +28,19 @@ exports.createQuestion = async (req, res) => {
 
 // Answer a question for an ad
 exports.answerQuestion = async (req, res) => {
-    const { answer } = req.body;            // Extract answer text from request body
-    const { adId, questionId } = req.params;  // Get ad and question IDs from request parameters
+    const { answer } = req.body;            
+    const { adId, questionId } = req.params;  
 
     try {
-        const question = await Question.findById(questionId); // Find question by ID
-        if (!question) return res.status(404).json({ message: 'Question not found' }); // If question not found, return 404
+        const question = await Question.findById(questionId);
+        if (!question) return res.status(404).json({ message: 'Question not found' }); 
         
         if (question.adId.toString() !== adId) return res.status(400).json({ message: 'Question does not belong to this ad' });
 
         // Ensure the user is the ad owner or an authorized user
         if (question.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
 
-        question.answer = answer;   // Set the answer on the question
+        question.answer = answer;   
         const updatedQuestion = await question.save();
         res.json(updatedQuestion);
     } catch (error) {
@@ -64,10 +64,10 @@ exports.createAd = async (req, res) => {
 // Get all ads
 exports.getAllAds = async (req, res) => {
     try {
-        const ads = await Ad.find();           // Retrieve all ads from the database
-        res.json(ads);                         // Respond with list of ads
+        const ads = await Ad.find();           
+        res.json(ads);                         
     } catch (error) {
-        res.status(500).json({ message: error.message }); // Handle errors with 500 response
+        res.status(500).json({ message: error.message }); 
     }
 };
 
@@ -105,7 +105,7 @@ exports.updateAd = async (req, res) => {
 // Disable an ad
 exports.disableAd = async (req, res) => {
     try {
-        const ad = await Ad.findById(req.params.id);  // Find ad by ID
+        const ad = await Ad.findById(req.params.id);  
         if (!ad || ad.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
 
         ad.endDate = Date.now(); // Set the end date to now to disable it

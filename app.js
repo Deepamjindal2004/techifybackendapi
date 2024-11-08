@@ -4,14 +4,14 @@ const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-require('dotenv').config(); // To access environment variables
+require('dotenv').config(); 
 
 const app = express();  // Initialize an express application
-const PORT = process.env.PORT || 3000;  // Use the port from environment variables or default to 3000
+const PORT = process.env.PORT || 3000;  
 
 // Middleware setup
-app.use(cors());  // Enable CORS for all routes
-app.use(bodyParser.json());  // Parse JSON data in request bodies
+app.use(cors());  
+app.use(bodyParser.json());  
 
 // Import route modules
 const userRoutes = require('./routes/userRoutes');
@@ -29,7 +29,7 @@ app.use('/api/ads', adRoutes);      // Routes for ad operations
 
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI)  // Use the MongoDB URI from environment variables
+mongoose.connect(process.env.MONGODB_URI)  
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log('MongoDB connection error:', err));
 
@@ -37,10 +37,10 @@ mongoose.connect(process.env.MONGODB_URI)  // Use the MongoDB URI from environme
 // Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });  // Send a generic error response
+    res.status(500).json({ message: 'Something went wrong!' });  
 });
 
 // Start the server
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);  // Log a message once the server is running
+    console.log(`Server is running on port ${PORT}`);  
 });
