@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');  // Import jsonwebtoken
+const jwt = require('jsonwebtoken');  
 
 // Middleware to authenticate the user
 exports.authenticate = (req, res, next) => {
@@ -9,7 +9,7 @@ exports.authenticate = (req, res, next) => {
     // Verify the token
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
         if (err) return res.status(403).json({ message: 'Failed to authenticate token' });
-        req.user = decoded; // Attach user info to request
+        req.user = decoded; 
         next();
     });
 };

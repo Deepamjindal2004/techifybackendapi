@@ -10,8 +10,8 @@ const {
     disableAd,
     createQuestion,
     answerQuestion
-} = require('../controllers/adController');  // Import the ad controller methods
-const { authenticate } = require('../middleware/authMiddleware'); // Import authentication middleware
+} = require('../controllers/adController');  
+const { authenticate } = require('../middleware/authMiddleware'); 
 
 // Create an ad
 router.post('/', authenticate, createAd);
