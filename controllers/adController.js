@@ -102,16 +102,25 @@ exports.updateAd = async (req, res) => {
     }
 };
 
-// Disable an ad
 exports.disableAd = async (req, res) => {
-    try {
-        const ad = await Ad.findById(req.params.id);  
-        if (!ad || ad.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
+    const adId = req.params.id;  // Get the adId from the URL
 
-        ad.endDate = Date.now(); // Set the end date to now to disable it
-        const updatedAd = await ad.save();
-        res.json(updatedAd);
+    try {
+        const ad = await Ad.findById(adId);  // Find ad by ID
+        if (!ad) {
+            return res.status(404).json({ error: "Ad not found" });
+        }
+
+        if (ad.userId.toString() !== req.user.id) {
+            return res.status(403).json({ error: "Unauthorized to disable this ad" });
+        }
+
+        ad.isActive = false;  // Set the ad as inactive
+        await ad.save();  // Save the changes to the ad
+
+        res.status(200).json({ message: "Ad disabled successfully", ad });
     } catch (error) {
-        res.status(500).json({ message: error.message });
+        res.status(500).json({ error: "An error occurred" });
     }
 };
+
