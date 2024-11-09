@@ -25,23 +25,29 @@ exports.createQuestion = async (req, res) => {
         res.status(400).json({ message: error.message });
     }
 };
-
-// Answer a question for an ad
 exports.answerQuestion = async (req, res) => {
-    const { answer } = req.body;            
-    const { adId, questionId } = req.params;  
+    const { answer } = req.body;
+    const { id: adId, questionId } = req.params;
 
     try {
         const question = await Question.findById(questionId);
-        if (!question) return res.status(404).json({ message: 'Question not found' }); 
-        
-        if (question.adId.toString() !== adId) return res.status(400).json({ message: 'Question does not belong to this ad' });
+        if (!question) {
+            return res.status(404).json({ message: 'Question not found' });
+        }
 
-        // Ensure the user is the ad owner or an authorized user
-        if (question.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
+        // Check if question belongs to the specified ad
+        if (question.adId.toString() !== adId) {
+            return res.status(400).json({ message: 'Question does not belong to this ad' });
+        }
 
-        question.answer = answer;   
+        // Ensure the user is authorized to answer the question
+        if (question.userId.toString() !== req.user.id) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
+
+        question.answer = answer;
         const updatedQuestion = await question.save();
+        
         res.json(updatedQuestion);
     } catch (error) {
         res.status(500).json({ message: error.message });
