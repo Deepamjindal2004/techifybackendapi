@@ -1,6 +1,4 @@
-// models/Ad.js
-
-const mongoose = require('mongoose');  
+const mongoose = require('mongoose');
 
 const adSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -10,6 +8,7 @@ const adSchema = new mongoose.Schema({
     startDate: { type: Date, default: Date.now },
     endDate: { type: Date, required: true },
     isActive: { type: Boolean, default: true },
+    image: { type: String }, // Add image field
 }, { timestamps: true });
 
-module.exports = mongoose.model('Ad', adSchema);
+module.exports = mongoose.model('Ad', adSchema);

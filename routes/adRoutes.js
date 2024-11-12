@@ -12,9 +12,10 @@ const {
     answerQuestion
 } = require('../controllers/adController');  
 const { authenticate } = require('../middleware/authMiddleware'); 
+const upload = require('../middleware/upload');
 
 // Create an ad
-router.post('/', authenticate, createAd);
+router.post('/', authenticate, upload.single('image'), createAd);
 
 // Get all ads
 router.get('/', getAllAds);
@@ -23,7 +24,7 @@ router.get('/', getAllAds);
 router.get('/:id', getAd);
 
 // Update an ad
-router.put('/:id', authenticate, updateAd);
+router.put('/:id', authenticate, upload.single('image'), updateAd);
 
 // Disable an ad
 router.patch('/:id/disable', authenticate, disableAd);

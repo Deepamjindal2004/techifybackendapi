@@ -1,6 +1,7 @@
 // app.js
 
 const express = require('express');
+const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -25,7 +26,7 @@ app.get('/', (req, res) => {
 // Use routes
 app.use('/api/users', userRoutes);  // Routes for user operations
 app.use('/api/ads', adRoutes);      // Routes for ad operations
-
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));// Serve static files from the "uploads" directory 
 
 
 // Connect to MongoDB
