@@ -8,8 +8,6 @@ const {
     getAd,
     updateAd,
     disableAd,
-    createQuestion,
-    answerQuestion
 } = require('../controllers/adController');  
 const { authenticate } = require('../middleware/authMiddleware'); 
 const upload = require('../middleware/upload');
@@ -28,11 +26,5 @@ router.put('/:id', authenticate, upload.single('image'), updateAd);
 
 // Disable an ad
 router.patch('/:id/disable', authenticate, disableAd);
-
-// Create a question for an ad
-router.post('/:id/questions', authenticate, createQuestion);
-
-// Answer a question for an ad
-router.post('/:id/questions/:questionId/answer', authenticate, answerQuestion);
 
 module.exports = router;
