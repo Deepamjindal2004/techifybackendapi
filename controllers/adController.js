@@ -1,5 +1,3 @@
-// controllers/adController.js
-
 const Ad = require('../models/Ad');
 
 // Create an ad
@@ -7,18 +5,11 @@ exports.createAd = async (req, res) => {
     const { title, description, price, endDate } = req.body;
     const imageUrl = req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : null;
 
-    const ad = new Ad({
-        title,
-        description,
-        price,
-        userId: req.user.id,
-        endDate,
-        image: imageUrl // Set the full URL for the image
-    });
-
     try {
-        const savedAd = await ad.save();
-        res.status(201).json(savedAd);
+        const ad = await Ad.create({
+            title, description, price, endDate, image: imageUrl, userId: req.user.id
+        });
+        res.status(201).json(ad);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
@@ -44,48 +35,60 @@ exports.getAd = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
 // Update an ad
 exports.updateAd = async (req, res) => {
     try {
-        const ad = await Ad.findById(req.params.id);
-        if (!ad || ad.userId.toString() !== req.user.id) return res.status(403).json({ message: 'Forbidden' });
-
-        const { title, description, price, endDate } = req.body;
-        ad.title = title;
-        ad.description = description;
-        ad.price = price;
-        ad.endDate = endDate;
-        if (req.file) {
-            ad.image = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`; // Set the full URL for the image
-        }
-
-        const updatedAd = await ad.save();
-        res.json(updatedAd);
+        const ad = await Ad.findOneAndUpdate(
+            { _id: req.params.id, userId: req.user.id },
+            {
+                ...req.body,
+                image: req.file ? `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}` : undefined,
+            },
+            { new: true, runValidators: true }
+        );
+        if (!ad) return res.status(403).json({ message: 'Forbidden' });
+        res.json(ad);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-
-exports.disableAd = async (req, res) => {
-    const adId = req.params.id;  // Get the adId from the URL
+// Search ads with optional filters
+exports.searchAds = async (req, res) => {
+    const { search, category, minPrice, maxPrice } = req.query;
+    const query = {
+        ...(search && {
+            $or: [
+                { title: { $regex: search, $options: 'i' } },
+                { description: { $regex: search, $options: 'i' } },
+            ],
+        }),
+        ...(category && { category }),
+        ...(minPrice && { price: { $gte: parseFloat(minPrice) } }),
+        ...(maxPrice && { price: { $lte: parseFloat(maxPrice) } }),
+    };
 
     try {
-        const ad = await Ad.findById(adId);  // Find ad by ID
-        if (!ad) {
-            return res.status(404).json({ error: "Ad not found" });
-        }
-
-        if (ad.userId.toString() !== req.user.id) {
-            return res.status(403).json({ error: "Unauthorized to disable this ad" });
-        }
-
-        ad.isActive = false;  // Set the ad as inactive
-        await ad.save();  // Save the changes to the ad
-
-        res.status(200).json({ message: "Ad disabled successfully", ad });
+        const ads = await Ad.find(query).sort({ createdAt: -1 });
+        if (!ads.length) return res.status(404).json({ message: 'No ads found matching the criteria.' });
+        res.json(ads);
     } catch (error) {
-        res.status(500).json({ error: "An error occurred" });
+        res.status(500).json({ message: 'Failed to fetch ads', error });
     }
 };
 
+// Disable an ad
+exports.disableAd = async (req, res) => {
+    try {
+        const ad = await Ad.findOneAndUpdate(
+            { _id: req.params.id, userId: req.user.id },
+            { isActive: false },
+            { new: true }
+        );
+        if (!ad) return res.status(403).json({ message: 'Unauthorized or Ad not found' });
+        res.json({ message: 'Ad disabled successfully', ad });
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred' });
+    }
+};

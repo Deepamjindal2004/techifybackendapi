@@ -1,15 +1,14 @@
-// routes/adRoutes.js
-
-const express = require('express');  // Import express for routing
-const router = express.Router();    // Create a new router instance
+const express = require('express');
+const router = express.Router();
 const {
-    createAd,
-    getAllAds,
-    getAd,
-    updateAd,
-    disableAd,
-} = require('../controllers/adController');  
-const { authenticate } = require('../middleware/authMiddleware'); 
+  createAd,
+  getAllAds,
+  getAd,
+  updateAd,
+  disableAd,
+  searchAds, // Import the search logic from the controller
+} = require('../controllers/adController');
+const { authenticate } = require('../middleware/authMiddleware');
 const upload = require('../middleware/upload');
 
 // Create an ad
@@ -18,7 +17,10 @@ router.post('/', authenticate, upload.single('image'), createAd);
 // Get all ads
 router.get('/', getAllAds);
 
-// Get a specific ad
+// Search ads by query
+router.get('/search', searchAds); // Delegates logic to the controller
+
+// Get a specific ad by ID
 router.get('/:id', getAd);
 
 // Update an ad
