@@ -11,7 +11,11 @@ const app = express();  // Initialize an express application
 const PORT = process.env.PORT || 3000;  
 
 // Middleware setup
-app.use(cors());  
+app.use(cors({
+    origin: "https://techifyapplication.netlify.app", // Your frontend URL
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
+    credentials: true // If you're using cookies or authentication tokens
+})); 
 app.use(bodyParser.json());  
 
 // Import route modules
