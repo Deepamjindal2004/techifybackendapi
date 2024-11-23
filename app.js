@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware setup
 app.use(cors({
-    origin: "https://techifyapplication.netlify.app", // Your frontend URL
+    origin: "https://techifyfrontendapp-2.onrender.com/", // Your frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true // If you're using cookies or authentication tokens
 })); 
