@@ -11,20 +11,10 @@ const app = express();  // Initialize an express application
 const PORT = process.env.PORT || 3000;  
 
 // Middleware setup
-const allowedOrigins = [
-    'https://techifyapplication.netlify.app',
-    'https://techifyfrontendapp-2.onrender.com',
-  ];
-  
-  app.use(cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
+app.use(cors({
+    origin: '*',
   }));
+  
 app.use(bodyParser.json());  
 
 // Import route modules
